@@ -15,14 +15,10 @@ const PORT = process.env.port || 3000;
 
 
 app.get("/",function(req,res){
-    console.log("g");
     res.send("IT WORKS!")
 })
 //Register User
 app.post('/register',function(req,res){
-  console.log("hh");
-console.log(req.body)
-
     const {fullName,age,gender,mail,password} = req.body;
     const userSchema = new mongoose.Schema({
         fullName:{
@@ -63,9 +59,7 @@ console.log(req.body)
             res.send("Registerd Successfully!");
         }
     });
-
-    
-})
+});
 
 
 
