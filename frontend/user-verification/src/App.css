@@ -1,0 +1,62 @@
+.App{
+  height: 100vh;
+  width: 100vw;
+  background-color: #F7FAFB;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #FFFFFF;
+  min-height: 60vh;
+  width: 30vw;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding: 50px;
+  border-radius: 11px;
+}
+
+.form-group{
+  width: 100%;
+}
+
+
+.submitBtn{
+  background-color:#20BEAD !important ;
+}
+
+a{
+  color: #20BEAD !important;
+  display: inline-block;  
+}
+
+a:hover{
+  color: #20BEAD !important;
+  text-decoration: none!important;
+}
+
+a.otpPage{
+  color: #04849a !important;
+
+}
+
+
+
+hr{border: 0;
+  clear:both;
+  display:block;
+  width: 96%;
+  color: #31394E;
+  height: 5px;
+  margin: 0!important;
+}
+
+.verticalLine{
+  border: 1px solid #454d62;
+  height: auto;
+
+}

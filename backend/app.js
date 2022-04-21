@@ -12,7 +12,16 @@ const saltRounds = 10;
 const mongoose = require("mongoose");
 mongoose.connect(process.env.DB_URL);
 
-const PORT = process.env.port || 3000;
+const cors = require("cors");
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions)); // Use this after the variable declaration
+
+const PORT = process.env.port || 4000;
 
 const nodemailer = require("nodemailer");
 
@@ -27,7 +36,7 @@ const oauth2Client = new OAuth2(
 
 oauth2Client.setCredentials({
   refresh_token:
-    "1//04IIwCrYIJxYGCgYIARAAGAQSNwF-L9IrAehsL3otdtdAU53gb_Bz8BwK4njAGRTlMRtX6kZjaJTv4dXd5_JKvPLPsvoueCImGj8",
+   process.env.REFRESH_TOKEN,
 });
 const accessToken = oauth2Client.getAccessToken();
 
@@ -68,13 +77,14 @@ const User = mongoose.model("User", userSchema);
 //Register User
 app.post("/register", async function (req, res) {
   try {
+    console.log(req.body);
     const { fullName, age, gender, mail, password } = req.body;
     //Checks If User Existed
     const userExisted = await User.findOne({ mail });
 
     if (userExisted) {
       console.log("User Already Existed!!");
-      res.send("User Already Existed!!");
+      res.send({ message: "User Already Existed!!" });
     } else {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hash = bcrypt.hashSync(password, salt);
@@ -91,7 +101,7 @@ app.post("/register", async function (req, res) {
       userData.save(function (err) {
         if (err) {
           console.log(err);
-          res.send("Registration Failed!");
+          res.send({ message: "Registration Failed!" });
         } else {
           console.log("Registered Successfully!!");
           async function sendMail() {
@@ -122,16 +132,18 @@ app.post("/register", async function (req, res) {
               };
 
               //Sending Mail
-              smtpTransport.sendMail(mailOptions, (error, response) => {
+               smtpTransport.sendMail(mailOptions, (error, response) => {
                 error ? console.log(error) : console.log(response);
                 smtpTransport.close();
               });
             } catch (error) {
+              console.log("sdsdds");
+
               console.log(error);
             }
           }
           sendMail();
-          res.send("Registerd Successfully!");
+          res.send({ message: "Registerd Successfully!" });
         }
       });
     }
@@ -155,15 +167,15 @@ app.post("/login", function (req, res) {
           if (user.verifiedUser.verified) {
             //Checks Password
             if (bcrypt.compareSync(password, user.password)) {
-              res.send("Login Successfully!!");
+              res.send({ message: "Login Successfully!!" });
             } else {
-              res.send("Invalid Login!!");
+              res.send({ message: "Invalid Login!!" });
             }
           } else {
-            res.send("Account Verification Required!!");
+            res.send({ message: "Account Verification Required!!" });
           }
         } else {
-          res.send("User Not existed!!");
+          res.send({ message: "User Not existed!!" });
         }
       }
     });
@@ -190,16 +202,16 @@ app.post("/verification", function (req, res) {
               function (err, data) {
                 if (err) {
                   console.log("Error Verifying OTP");
-                  res.send("Error Verifyin OTP!");
+                  res.send({ message: "Error Verifyin OTP!" });
                 }
                 console.log(data);
               }
             );
             console.log("User Account verified!");
-            res.send("User Account verified!");
+            res.send({ message: "User Account verified!" });
           } else {
             console.log("Invalid OTP!!");
-            res.send("Invalid OTP!!");
+            res.send({ message: "Invalid OTP!!" });
           }
         } else {
           console.log("User Account Already verified!");
@@ -207,7 +219,7 @@ app.post("/verification", function (req, res) {
         }
       } else {
         console.log("User Not Existed!");
-        res.send("User not existed");
+        res.send({ message: "User not existed" });
       }
     });
   } catch (error) {
